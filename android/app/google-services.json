@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "895416754674",
+    "project_id": "ellowbiz0",
+    "storage_bucket": "ellowbiz0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895416754674:android:aea21aebeb213f4cef8b6b",
+        "android_client_info": {
+          "package_name": "com.ellow_biz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895416754674-hq5dncqe0druiicb4i6q76s81bfsselq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ellow_biz",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "895416754674-hnnh2m9md8n9idu26plp1qf0q9hqpo1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJlEswOWi0BwVeSuNhH_sL9wJtSrYQEp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895416754674-hnnh2m9md8n9idu26plp1qf0q9hqpo1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
