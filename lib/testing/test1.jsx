@@ -1,42 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { View, Image, StyleSheet } from 'react-native';
 import storage from '@react-native-firebase/storage';
 
-const test1 = () => {
-    const [photos, setPhotos] = useState([]);
+const ImagePage = () => {
+    const [imageUrl, setImageUrl] = useState(null);
 
-    useEffect(() => {
-        const fetchPhotos = async () => {
-            try {
-                const photoCollection = firestore().collection('photos');
-                const snapshot = await photoCollection.get();
-                const fetchedPhotos = [];
-
-                for (const doc of snapshot.docs) {
-                    const photoData = doc.data();
-                    const photoUrl = await storage().ref(photoData.path).getDownloadURL();
-                    fetchedPhotos.push({ id: doc.id, url: photoUrl });
-                }
-                console.log('fetchedPhotos', fetchedPhotos);
-                setPhotos(fetchedPhotos);
-
-            } catch (error) {
-                console.error('Error fetching photos:', error);
-            }
-        };
-
-        fetchPhotos();
-    }, []);
+//     useEffect(() => {
+        
+//         const fetchImage = async () => {
+//             try{
+//                 const url = await storage()
+//                 .ref('gs://ellowbiz0.appspot.com/images/banner.png')
+//                 .getDownloadURL();
+//             setImageUrl(url);
+//             console.log(url);
+//         }
+//     catch(e){
+//         console.log(e);
+//     }
+// };
+//         fetchImage();
+//     }, []);
 
     return (
-        <View>
-            <Text>Photos:</Text>
-            {photos.map((photo) => (
-                <Image key={photo.id} source={{ uri: photo.url }} style={{ width: 200, height: 200 }} />
-            ))}
+        <View style={styles.container}>
+            <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/ellowbiz0.appspot.com/o/images%2Fbanner.png?alt=media&token=b61db8cc-7246-436a-88b8-2a2e11ad6b34' }} style={styles.image} />
         </View>
     );
 };
 
-export default test1;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: 200,
+        height: 200,
+    },
+});
+
+export default ImagePage;

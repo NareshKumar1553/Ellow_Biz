@@ -22,6 +22,7 @@ const Login = ({navigation}) => {
 
     const handleGoogleSignup = async () => {
         try {
+            console.log('Google signup initiated...');
             // Sign in with Google
             const { idToken } = await GoogleSignin.signIn();
 
@@ -47,12 +48,22 @@ const Login = ({navigation}) => {
             await AsyncStorage.setItem('name', name);
             await AsyncStorage.setItem('email', email);
             await AsyncStorage.setItem('photo', photo);
+            
+            const userRef = firestore().collection('users').doc(auth().currentUser.uid);
+            const userDoc = await userRef.get();
 
-            await firestore().collection('users').doc(auth().currentUser.uid).set({
-                name: name,
-                email: email,
-                photo: photo,
-            });
+            if (userDoc.exists) {
+                // Existing user
+                console.log('Existing user:', userDoc.data());
+            } else {
+                // New user
+                console.log('New user:', name, email, photo);
+                await userRef.set({
+                    name: name,
+                    email: email,
+                    photo: photo,
+                });
+            }
             console.log('Google user info: ', userInfo);
             console.log('Google user name: ', name,email,photo);
             console.log('Google signup successful!');

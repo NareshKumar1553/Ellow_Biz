@@ -5,8 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Home from "../screens/Home";
 import Login from "../screens/Login";
-import test1 from "../testing/test1";
 import Profile from "../screens/Profile";
+import Test1 from "../testing/test1";
 
 
 const Stack = createNativeStackNavigator();
@@ -55,12 +55,13 @@ const StackNavigation = () => {
                 {name != null ? (
                     <Stack.Screen name="Home1" component={Home} />
                 ) : (
-                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="Login1" component={Login} />
                 )
                 }
 
                 <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="test1" component={test1} />
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="test1" component={Test1} />
                 <Stack.Screen name="profile" component={Profile} />
             </Stack.Navigator>
         </NavigationContainer>

@@ -1,15 +1,32 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-
+import firestore from '@react-native-firebase/firestore';
+import styles from "../styles/styles";
 const Home = ({route,navigation}) => {
+
+    console.log('Home Page');
+    let bannerImage = 'https://firebasestorage.googleapis.com/v0/b/ellowbiz0.appspot.com/o/images%2Fbanner.png?alt=media&token=b61db8cc-7246-436a-88b8-2a2e11ad6b34';
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [photo, setPhoto] = React.useState('');
-
+    const [imageUrl, setImageUrl] = React.useState([]);
+    const [imageName, setImageName] = React.useState([]);
+    let image = []; 
+    let Imgname = [];
     React.useEffect(() => {
         const data = async () => {
+            await firestore().collection('photos').doc('categories').collection('image').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    image.push(doc.data().img);
+                    Imgname.push(doc.data().name);
+                });
+            });
+
+            setImageUrl(image);
+            setImageName(Imgname);
+            console.log('Image Url: ', imageUrl);
             try {
                 const name = await AsyncStorage.getItem('name');
                 setName(name);
@@ -25,13 +42,14 @@ const Home = ({route,navigation}) => {
         data();
     }, []);
     
-    console.log(name,email,photo);
+    console.log(name,email,photo,imageUrl);
     return (
-        <LinearGradient colors={['#e6ed79', '#DDF969']} style={styles.container}>
+        <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{flex:1}}>
         <View style={styles.container}>
+            <ScrollView>
             <StatusBar barStyle="dark-content" backgroundColor={'#e6ed79'}/>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerTouch}>
+                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.headerTouch}>
                     <Image source={require('../asset/drawer.png')} style={styles.headerImage} />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>EllowBiz</Text>
@@ -39,73 +57,69 @@ const Home = ({route,navigation}) => {
                     <Image source={{uri: photo}} style={styles.headerImage} />
                 </TouchableOpacity>
             </View>
+
+            <View style={styles.subContainerBanner}>
+                <Image source={{uri: bannerImage}} resizeMode="stretch" style={styles.bannerImage} />
+            </View>
+
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>Welcome, {name}</Text>
+            </View>
+
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>CATEGORIES:</Text>
+            </View>
+
+            <View style={styles.subContainer}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {imageUrl.map((item, index) => {
+                        return (
+                            <View key={index}>
+                                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
+                                    <Image source={{uri: item}} style={styles.categoriesImage} resizeMode="stretch"/>
+                                </TouchableOpacity>
+                                <Text style={styles.imageText}>{imageName[index]}</Text>
+                            </View>
+                        );
+                    }
+                    )}
+                </ScrollView>
+            </View>
+
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>LATEST PRODUCTS:</Text>
+            </View>
+
+            <View style={styles.subContainer}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {imageUrl.map((item, index) => {
+                        return (
+                            <View key={index}>
+                                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
+                                    <Image source={{uri: item}} style={styles.categoriesImage} resizeMode="stretch"/>
+                                </TouchableOpacity>
+                                <Text style={styles.imageText}>{imageName[index]}</Text>
+                            </View>
+                        );
+                    }
+                    )}
+                </ScrollView>
+            </View>
+
+
             <TouchableOpacity onPress={() => navigation.navigate('test1')} style={styles.button}>
                 <Text>test1</Text>
             </TouchableOpacity>
 
 
-            <Text style={styles.text}>Name: {name}</Text>
-
+            
+        </ScrollView>            
         </View>
         </LinearGradient>
+        
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-      },
-    header: {
-        flexDirection:'row',
-        top:0,
-        backgroundColor:'#e6ed79',
-        height:'auto',
-        width:'100%',
-        alignItems:'center',
-        justifyContent:'space-between',
-        borderBottomLeftRadius:20,
-        borderBottomRightRadius:20,
-    },
-    headerText: {
-        fontSize: 20,
-        color: '#333',
-        textAlign:'center',
-        justifyContent:'center'
-    },
-    headerImage: {
-        width: 50,
-        height: 50,
-        marginRight: 10,
-        borderRadius: 50,
-    },
-    button: {
-        backgroundColor:'#eef2b6',
-        padding:10,
-        borderRadius:24,
-        width:200,
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop:10,
-        marginLeft:10,
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: '#fff',
-        marginBottom: 10,
-        marginTop: 10,
-        marginRight: 10,
-    },
-    headerTouch: {
-        marginLeft: 10,
-        marginBottom: 10,
-    },
-    text: {
-        fontSize: 20,
-        color: '#333'
-    }
-});
+
 
 export default Home;

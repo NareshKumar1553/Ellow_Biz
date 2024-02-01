@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
 import { firebase } from '@react-native-firebase/auth';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
@@ -17,6 +17,7 @@ const Profile = () => {
         const fetchUserData = async () => {
             try {
                 const user = firebase.auth().currentUser;
+                console.log('user', user);
                 if (user) {
                     const userData = await firestore().collection('users').doc(user.uid).get();
                     if (userData.exists) {
@@ -41,6 +42,21 @@ const Profile = () => {
         fetchUserData();
     }, []);
 
+    const logOut = async () => {
+        console.log('Logging out...');
+        try {
+            await AsyncStorage.clear();
+            await firebase.auth().signOut();
+            console.log('Logged out successfully!');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
+        } catch (error) {
+            console.log('Error logging out:', error);
+        }
+    };
+
     const saveProfile = async () => {
         try {
             // Save user data to AsyncStorage
@@ -63,6 +79,8 @@ const Profile = () => {
                 console.log('No user is logged in');
             }
             console.log('Profile saved successfully!');
+            Alert.alert('Profile saved successfully!');
+            navigation.pop();
         } catch (error) {
             console.log('Error saving profile:', error);
         }
@@ -72,7 +90,7 @@ const Profile = () => {
         <LinearGradient colors={['#e6ed79', '#DDF969']} style={styles.container}>
         <Image source={require('../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} />
 
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.text}>Email:</Text>
             <TextInput value={email} onChangeText={setEmail} style={styles.input}/>
 
@@ -90,6 +108,10 @@ const Profile = () => {
 
             <TouchableOpacity title="Save" onPress={saveProfile} style={styles.loginButton}>
                 <Text style={styles.buttonText}>Save</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity title="Logout" onPress={logOut} style={styles.loginButton}>
+                <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
         </ScrollView>
         </LinearGradient>
