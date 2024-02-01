@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, ImageBackground } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import firestore from '@react-native-firebase/firestore';
 import styles from "../styles/styles";
@@ -11,22 +11,42 @@ const Home = ({route,navigation}) => {
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [photo, setPhoto] = React.useState('');
-    const [imageUrl, setImageUrl] = React.useState([]);
-    const [imageName, setImageName] = React.useState([]);
+    const [categoriesImageUrl, setcategoriesImageUrl] = React.useState([]);
+    const [categoriesImageName, setcategoriesImageName] = React.useState([]);
+    const [latestImageUrl, setlatestImageUrl] = React.useState([]);
+    const [latestImageName, setlatestImageName] = React.useState([]);
+    const [data,setData] = React.useState([]);
+    let details = {};
     let image = []; 
     let Imgname = [];
     React.useEffect(() => {
-        const data = async () => {
+        const fetchData = async () => {
             await firestore().collection('photos').doc('categories').collection('image').get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     image.push(doc.data().img);
                     Imgname.push(doc.data().name);
                 });
             });
+            setcategoriesImageUrl(image);
+            setcategoriesImageName(Imgname);
+            image = [];
+            Imgname = [];
+            await firestore().collection('photos').doc('latestProduct').collection('image').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    image.push
+                    (
+                        details = {
+                            name: doc.data().name,
+                            price: doc.data().price,
+                            img: doc.data().url,
+                        }
+                    );
+                });
+            });
+            setData(image);
+            console.log(data);
+            console.log('Finish');
 
-            setImageUrl(image);
-            setImageName(Imgname);
-            console.log('Image Url: ', imageUrl);
             try {
                 const name = await AsyncStorage.getItem('name');
                 setName(name);
@@ -39,10 +59,10 @@ const Home = ({route,navigation}) => {
             }
         };
 
-        data();
+        fetchData();
     }, []);
     
-    console.log(name,email,photo,imageUrl);
+    console.log(name,email,photo);
     return (
         <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{flex:1}}>
         <View style={styles.container}>
@@ -70,15 +90,16 @@ const Home = ({route,navigation}) => {
                 <Text style={styles.subHeadingText}>CATEGORIES:</Text>
             </View>
 
-            <View style={styles.subContainer}>
+            <View style={styles.subContainer1}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    {imageUrl.map((item, index) => {
+                    {categoriesImageUrl.map((item, index) => {
                         return (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
-                                    <Image source={{uri: item}} style={styles.categoriesImage} resizeMode="stretch"/>
+                                    <ImageBackground source={{uri: item}} style={styles.cardImage} resizeMode="stretch">
+                                    </ImageBackground>
                                 </TouchableOpacity>
-                                <Text style={styles.imageText}>{imageName[index]}</Text>
+                                <Text style={styles.imageText}>{categoriesImageName[index]}</Text>
                             </View>
                         );
                     }
@@ -89,22 +110,25 @@ const Home = ({route,navigation}) => {
             <View style={styles.subContainer}>
                 <Text style={styles.subHeadingText}>LATEST PRODUCTS:</Text>
             </View>
-
-            <View style={styles.subContainer}>
+            
+            <View style={styles.subContainer1}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    {imageUrl.map((item, index) => {
+                    {data.map((item, index) => {
                         return (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
-                                    <Image source={{uri: item}} style={styles.categoriesImage} resizeMode="stretch"/>
+                                    <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
+                                        <Text style={styles.cardPrice}>{item.price}</Text>
+                                    </ImageBackground>
                                 </TouchableOpacity>
-                                <Text style={styles.imageText}>{imageName[index]}</Text>
+                                <Text style={styles.cardText}>{item.name}</Text>
                             </View>
                         );
                     }
                     )}
                 </ScrollView>
             </View>
+            
 
 
             <TouchableOpacity onPress={() => navigation.navigate('test1')} style={styles.button}>

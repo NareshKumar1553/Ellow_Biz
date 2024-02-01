@@ -5,14 +5,21 @@ const styles = StyleSheet.create({
         flex:1,
         flexBasis: 'auto',
         flexDirection:'column',
-   
+        
       },
     subContainer: {
         flexDirection:'column',
         justifyContent: 'flex-start',
         marginTop:5,
+        borderBottomColor:'#e6ed79',
+        borderBottomWidth:2,
         
     },
+    subContainer1: {
+        flexDirection:'column',
+        justifyContent: 'flex-start',
+        marginTop:5,
+     },
     subContainerBanner: {
         flexDirection:'column',
         justifyContent: 'flex-start',
@@ -108,6 +115,45 @@ const styles = StyleSheet.create({
         borderTopRightRadius:24,
         
     },
+    card: {
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+        alignItems:'center',
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor:'#eef2b6',
+        padding:10,
+        borderRadius:24,
+        
+    },
+    cardImage: {
+        overflow: 'hidden',
+        width: 250,
+        height: 150,
+        marginRight: 5,
+        marginBottom: 10,
+        marginTop: 20,
+        borderRadius: 20,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+    },
+    cardText: {
+        fontSize: 15,
+        color: '#333',
+        marginLeft: 10,
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign:'center'
+    },
+    cardPrice: {
+        fontSize: 15,
+        color: '#333',
+        marginLeft: 10,
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign:'center'
+    },
+    
     
 });
 
