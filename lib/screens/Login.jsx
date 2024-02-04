@@ -6,10 +6,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 
-LinearGradient.defaultProps = {
-    ...LinearGradient.defaultProps,
-    colors: ['#faf757', '#a9fa57'],
-};
 
 
 GoogleSignin.configure({
@@ -68,16 +64,19 @@ const Login = ({navigation}) => {
             console.log('Google user name: ', name,email,photo);
             console.log('Google signup successful!');
             
-
-            navigation.push('Home');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
+           
         } catch (error) {
             console.error('Google signup error:', error);
         }
     };
 
     return (
-        <LinearGradient style={{flex:1}} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
-        <StatusBar barStyle="dark-content" backgroundColor={'#faf757'}/>
+        <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{flex:1}}>
+        <StatusBar barStyle="dark-content" backgroundColor={'#e6ed79'}/>
         <View style={styles.container}>
             <Image source={require('../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={{width:100,height:100}}/>
             <Text style={styles.text}>Email</Text>
@@ -102,7 +101,22 @@ const Login = ({navigation}) => {
                             email: email,
                             password: password,
                         });
-                        navigation.push('Home', { name: email });
+                        if(email === 'admin@ellowbiz.com' && password === 'admin123'){
+                            await AsyncStorage.setItem('name', email);
+                            console.log('Admin login');
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Admin' }],
+                              });
+                        }
+                        else{
+                        await AsyncStorage.setItem('name', email);
+                        console.log('User login');
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Home' }],
+                          });
+                        }
                     })
                     .catch(error => {
                         if (error.code === 'auth/email-already-in-use') {

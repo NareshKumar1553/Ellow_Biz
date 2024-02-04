@@ -42,11 +42,17 @@ const styles = StyleSheet.create({
         textAlign:'center',
         justifyContent:'center'
     },
-    headerImage: {
+    profileImage: {
         width: 50,
         height: 40,
         marginRight: 10,
         borderRadius: 40,
+    },
+    myCartImage: {
+        width: 40,
+        height: 40,
+        marginLeft: 5,
+        borderRadius: 10,
     },
     categories: {
         flexDirection:'row',
@@ -152,6 +158,19 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontWeight: 'bold',
         textAlign:'center'
+    },
+    input: {
+        borderWidth:1,
+        borderColor:'#333',
+        padding:10,
+        width:'70%',
+        marginBottom:10,
+        borderRadius:10,
+        backgroundColor:'#eef2b6',
+        color:'#333'
+    },
+    inputError: {
+        borderColor: 'red',
     },
     
     

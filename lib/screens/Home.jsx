@@ -70,11 +70,11 @@ const Home = ({route,navigation}) => {
             <StatusBar barStyle="dark-content" backgroundColor={'#e6ed79'}/>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.headerTouch}>
-                    <Image source={require('../asset/drawer.png')} style={styles.headerImage} />
+                    <Image source={require('../asset/myCart.png')} resizeMode="stretch" style={styles.myCartImage} />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>EllowBiz</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('profile')}>
-                    <Image source={{uri: photo}} style={styles.headerImage} />
+                    <Image source={{uri: photo}} style={styles.profileImage} />
                 </TouchableOpacity>
             </View>
 
@@ -131,9 +131,9 @@ const Home = ({route,navigation}) => {
             
 
 
-            <TouchableOpacity onPress={() => navigation.navigate('test1')} style={styles.button}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('test1')} style={styles.button}>
                 <Text>test1</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
 
             
