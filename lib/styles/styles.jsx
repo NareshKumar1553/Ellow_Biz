@@ -148,16 +148,22 @@ const styles = StyleSheet.create({
         color: '#333',
         marginLeft: 10,
         marginTop: 10,
+        marginBottom: 10,
         fontWeight: 'bold',
         textAlign:'center'
     },
     cardPrice: {
         fontSize: 15,
         color: '#333',
-        marginLeft: 10,
-        marginTop: 10,
+        marginRight: 5,
+        marginTop: 2,
         fontWeight: 'bold',
-        textAlign:'center'
+        textAlign:'center',
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:15,
+        width:100,
+
     },
     input: {
         borderWidth:1,

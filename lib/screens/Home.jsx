@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, ImageBackgr
 import LinearGradient from "react-native-linear-gradient";
 import firestore from '@react-native-firebase/firestore';
 import styles from "../styles/styles";
+import Loading from "../animation/Loading";
 const Home = ({route,navigation}) => {
 
     console.log('Home Page');
@@ -13,9 +14,10 @@ const Home = ({route,navigation}) => {
     const [photo, setPhoto] = React.useState('');
     const [categoriesImageUrl, setcategoriesImageUrl] = React.useState([]);
     const [categoriesImageName, setcategoriesImageName] = React.useState([]);
-    const [latestImageUrl, setlatestImageUrl] = React.useState([]);
-    const [latestImageName, setlatestImageName] = React.useState([]);
     const [data,setData] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
+    const [allProducts, setAllProducts] = React.useState([]);
+
     let details = {};
     let image = []; 
     let Imgname = [];
@@ -39,11 +41,27 @@ const Home = ({route,navigation}) => {
                             name: doc.data().name,
                             price: doc.data().price,
                             img: doc.data().url,
+                            description: doc.data().description,
                         }
                     );
                 });
             });
             setData(image);
+            image = [];
+            details = {};
+            await firestore().collection('products').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    image.push(
+                        details = {
+                            name: doc.data().name,
+                            price: doc.data().price,
+                            img: doc.data().image,
+                            description: doc.data().description,
+                        }
+                    );
+                });
+            });
+            setAllProducts(image);
             console.log(data);
             console.log('Finish');
 
@@ -79,12 +97,15 @@ const Home = ({route,navigation}) => {
             </View>
 
             <View style={styles.subContainerBanner}>
-                <Image source={{uri: bannerImage}} resizeMode="stretch" style={styles.bannerImage} />
+                {bannerImage === '' ? <Loading/> : <Image source={{uri: bannerImage}} resizeMode="stretch" style={styles.bannerImage} />}
+                
             </View>
 
             <View style={styles.subContainer}>
                 <Text style={styles.subHeadingText}>Welcome, {name}</Text>
             </View>
+
+            {/* CATEGORIES  */}
 
             <View style={styles.subContainer}>
                 <Text style={styles.subHeadingText}>CATEGORIES:</Text>
@@ -95,7 +116,7 @@ const Home = ({route,navigation}) => {
                     {categoriesImageUrl.map((item, index) => {
                         return (
                             <View key={index}>
-                                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
+                                <TouchableOpacity onPress={() => navigation.navigate('#',item)} style={styles.categories}>
                                     <ImageBackground source={{uri: item}} style={styles.cardImage} resizeMode="stretch">
                                     </ImageBackground>
                                 </TouchableOpacity>
@@ -107,6 +128,8 @@ const Home = ({route,navigation}) => {
                 </ScrollView>
             </View>
 
+             {/* LATEST PRODUCT  */}
+
             <View style={styles.subContainer}>
                 <Text style={styles.subHeadingText}>LATEST PRODUCTS:</Text>
             </View>
@@ -116,7 +139,7 @@ const Home = ({route,navigation}) => {
                     {data.map((item, index) => {
                         return (
                             <View key={index}>
-                                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.categories}>
+                                <TouchableOpacity onPress={() => navigation.navigate('ProductDetails',item)} style={styles.categories}>
                                     <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
                                         <Text style={styles.cardPrice}>{item.price}</Text>
                                     </ImageBackground>
@@ -129,13 +152,45 @@ const Home = ({route,navigation}) => {
                 </ScrollView>
             </View>
             
+            {/* ALL PRODUCT  */}
 
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>ALL PRODUCTS:</Text>
+            </View>
 
-            {/* <TouchableOpacity onPress={() => navigation.navigate('test1')} style={styles.button}>
-                <Text>test1</Text>
-            </TouchableOpacity> */}
+            <View style={styles.subContainer1}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {allProducts.map((item, index) => {
+                        return (
+                            <View key={index}>
+                                <TouchableOpacity onPress={() => navigation.navigate('ProductDetails',item)} style={styles.categories}>
+                                    <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
+                                        <Text style={styles.cardPrice}>{item.price}</Text>
+                                    </ImageBackground>
+                                </TouchableOpacity>
+                                <Text style={styles.cardText}>{item.name}</Text>
+                            </View>
+                        );
+                    }
+                    )}
+                </ScrollView>
+            </View>
 
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>USERS : </Text>
+            </View>
 
+            <View style={styles.subContainer1}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    <View>
+                        <TouchableOpacity onPress={() => navigation.navigate('Loading')} style={styles.categories}>
+                            <Image source={require('../../android/app/src/main/res/mipmap-hdpi/ic_launcher.png')} style={styles.cardImage} resizeMode="stretch">
+                            </Image>
+                        </TouchableOpacity>
+                        <Text style={styles.imageText}>User Details</Text>
+                    </View>
+                </ScrollView>
+            </View>
             
         </ScrollView>            
         </View>

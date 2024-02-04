@@ -10,6 +10,8 @@ import Test1 from "../testing/test1";
 import Admin from "../screens/admin/Admin";
 import AddProduct from "../screens/admin/AddProduct";
 import UserDetails from "../screens/admin/UserDetails";
+import Loading from "../animation/Loading";
+import ProductDetails from "../screens/ProductDetails";
 
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +24,7 @@ const StackNavigation = () => {
         const getName = async () => {
             try {
                 const name = await AsyncStorage.getItem('name');
+                console.log('name:', name);
                 setName(name);
             } catch (error) {
                 console.error(error);
@@ -34,7 +37,6 @@ const StackNavigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator 
-                initialRouteName="Login"
                 screenOptions={{
                     headerShown: false,
                     gestureEnabled: true,
@@ -64,11 +66,12 @@ const StackNavigation = () => {
 
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="test1" component={Test1} />
                 <Stack.Screen name="profile" component={Profile} />
                 <Stack.Screen name="Admin" component={Admin}    />
                 <Stack.Screen name="AddProduct" component={AddProduct} />
                 <Stack.Screen name="UserDetails" component={UserDetails} />
+                <Stack.Screen name="Loading" component={Loading} />
+                <Stack.Screen name="ProductDetails" component={ProductDetails} />
             </Stack.Navigator>
         </NavigationContainer>
     );
