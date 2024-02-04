@@ -75,6 +75,7 @@ const Home = ({route,navigation}) => {
             } catch (error) {
                 console.error(error);
             }
+            setLoading(false); // Set loading to false after data is fetched
         };
 
         fetchData();
@@ -87,17 +88,19 @@ const Home = ({route,navigation}) => {
             <ScrollView>
             <StatusBar barStyle="dark-content" backgroundColor={'#e6ed79'}/>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('#')} style={styles.headerTouch}>
+                <TouchableOpacity onPress={() => navigation.navigate('MyCart')} style={styles.headerTouch}>
                     <Image source={require('../asset/myCart.png')} resizeMode="stretch" style={styles.myCartImage} />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>EllowBiz</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('profile')}>
-                    <Image source={{uri: photo}} style={styles.profileImage} />
+
+                    {photo === null ? <Image source={require('../asset/profile.png')} style={styles.profileImage} /> : <Image source={{uri: photo}} style={styles.profileImage} />}
+                    
                 </TouchableOpacity>
             </View>
 
             <View style={styles.subContainerBanner}>
-                {bannerImage === '' ? <Loading/> : <Image source={{uri: bannerImage}} resizeMode="stretch" style={styles.bannerImage} />}
+                {loading ? <Loading /> : <Image source={{uri: bannerImage}} resizeMode="stretch" style={styles.bannerImage} />}
                 
             </View>
 
@@ -117,8 +120,9 @@ const Home = ({route,navigation}) => {
                         return (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigation.navigate('#',item)} style={styles.categories}>
-                                    <ImageBackground source={{uri: item}} style={styles.cardImage} resizeMode="stretch">
-                                    </ImageBackground>
+                                    {loading ? <Loading /> : <ImageBackground source={{uri: item}} style={styles.cardImage} resizeMode="stretch">
+                                    </ImageBackground> }
+                                                                        
                                 </TouchableOpacity>
                                 <Text style={styles.imageText}>{categoriesImageName[index]}</Text>
                             </View>
@@ -140,9 +144,12 @@ const Home = ({route,navigation}) => {
                         return (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigation.navigate('ProductDetails',item)} style={styles.categories}>
-                                    <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
+                                    
+                                    {loading ? <Loading /> : <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
                                         <Text style={styles.cardPrice}>{item.price}</Text>
                                     </ImageBackground>
+                                    }   
+                                    
                                 </TouchableOpacity>
                                 <Text style={styles.cardText}>{item.name}</Text>
                             </View>
@@ -164,9 +171,11 @@ const Home = ({route,navigation}) => {
                         return (
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigation.navigate('ProductDetails',item)} style={styles.categories}>
-                                    <ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
+                                    
+                                    {loading ? <Loading/>:<ImageBackground source={{uri: item.img}} style={styles.cardImage} resizeMode="stretch">
                                         <Text style={styles.cardPrice}>{item.price}</Text>
                                     </ImageBackground>
+                                    }
                                 </TouchableOpacity>
                                 <Text style={styles.cardText}>{item.name}</Text>
                             </View>
@@ -176,21 +185,7 @@ const Home = ({route,navigation}) => {
                 </ScrollView>
             </View>
 
-            <View style={styles.subContainer}>
-                <Text style={styles.subHeadingText}>USERS : </Text>
-            </View>
-
-            <View style={styles.subContainer1}>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <View>
-                        <TouchableOpacity onPress={() => navigation.navigate('Loading')} style={styles.categories}>
-                            <Image source={require('../../android/app/src/main/res/mipmap-hdpi/ic_launcher.png')} style={styles.cardImage} resizeMode="stretch">
-                            </Image>
-                        </TouchableOpacity>
-                        <Text style={styles.imageText}>User Details</Text>
-                    </View>
-                </ScrollView>
-            </View>
+           
             
         </ScrollView>            
         </View>

@@ -43,7 +43,12 @@ const Login = ({navigation}) => {
 
             await AsyncStorage.setItem('name', name);
             await AsyncStorage.setItem('email', email);
-            await AsyncStorage.setItem('photo', photo);
+            
+            if (photo !== null && photo !== undefined) {
+                AsyncStorage.setItem('photo', value);
+            } else {
+                AsyncStorage.removeItem('photo');
+            }
             
             const userRef = firestore().collection('users').doc(auth().currentUser.uid);
             const userDoc = await userRef.get();

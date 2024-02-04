@@ -12,6 +12,8 @@ import AddProduct from "../screens/admin/AddProduct";
 import UserDetails from "../screens/admin/UserDetails";
 import Loading from "../animation/Loading";
 import ProductDetails from "../screens/ProductDetails";
+import MyCart from "../screens/MyCart";
+import Success from "../animation/Success";
 
 
 const Stack = createNativeStackNavigator();
@@ -34,7 +36,7 @@ const StackNavigation = () => {
         getName();
     }, []);
 
-    return (
+        return (
         <NavigationContainer>
             <Stack.Navigator 
                 screenOptions={{
@@ -57,12 +59,13 @@ const StackNavigation = () => {
                     },
                 }}
             >
-                {name != null ? (
+                { name === "admin@ellowbiz.com" ? (
+                    <Stack.Screen name="Admin1" component={Admin} />
+                ) : name != null ? (
                     <Stack.Screen name="Home1" component={Home} />
                 ) : (
                     <Stack.Screen name="Login1" component={Login} />
-                )
-                }
+                )}
 
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Login" component={Login} />
@@ -72,6 +75,8 @@ const StackNavigation = () => {
                 <Stack.Screen name="UserDetails" component={UserDetails} />
                 <Stack.Screen name="Loading" component={Loading} />
                 <Stack.Screen name="ProductDetails" component={ProductDetails} />
+                <Stack.Screen name="MyCart" component={MyCart} />
+                <Stack.Screen name="OrderPlaced" component={Success} />
             </Stack.Navigator>
         </NavigationContainer>
     );

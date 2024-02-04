@@ -2,26 +2,47 @@ import React from "react";
 import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import firestore from '@react-native-firebase/firestore';
 
-const AddProduct = ({ navigation }) => {
+const AddProduct = ({ navigation,route }) => {
     const [name, setName] = React.useState('');
     const [price, setPrice] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [image, setImage] = React.useState('');
+
+    const {pname} = route.params;
+
+    // console.log('pname:', pname);
 
     const isInputEmpty = (value) => {
         return value.trim() === '';
     };
 
     const handleAddProduct = () => {
-        firestore().collection('products').doc(name).set({
-            name: name,
-            price: price,
-            description: description,
-            image: image
-        });
-      console.log('Product added successfully!');
+        if(pname === 'AllProducts'){
+            firestore().collection('products').add({
+                name: name,
+                price: price,
+                description: description,
+                image: image,
+            });
+            console.log('Product added successfully!');
+        }
+        else if(pname === 'LatestProducts'){
+            firestore().collection('photos').doc('latestProduct').collection('image').doc(name).set({
+                name: name,
+                price: price,
+                description: description,
+                url: image,
+            });
+            console.log('Latest Product added successfully!');
+        }
+       else if(pname === 'Categories'){
+            firestore().collection('photos').doc('categories').collection('image').doc(name).set({
+                name: name,
+                img: image,
+            });
+            console.log('Category added successfully!');
+        }
     };
-
     return (
         <View style={{flex:1,justifyContent:'center',alignIt:'center'}}>
             <View style={styles.header}>
@@ -47,6 +68,7 @@ const AddProduct = ({ navigation }) => {
                         style={[styles.input, isInputEmpty(price) && styles.inputError]}
                         value={price}
                         onChangeText={setPrice}
+                        keyboardType="numeric"
                         placeholder="Product Price"
                     />
 
@@ -79,6 +101,7 @@ const AddProduct = ({ navigation }) => {
                             setDescription('');
                             setImage('');
                             Alert.alert('Product added successfully!');
+                            navigation.push('OrderPlaced',{name:'Admin'});
                         }
                         
                     }

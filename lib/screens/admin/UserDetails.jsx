@@ -34,6 +34,8 @@ const UserDetails = ({ route, navigation }) => {
                             await currentUser.delete();
                         }
 
+                        // Fetch the cart details
+                        
                         console.log('User deleted successfully!');
                         navigation.goBack();
                     } catch (error) {

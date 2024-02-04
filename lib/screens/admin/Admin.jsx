@@ -66,7 +66,7 @@ const Admin = ({ navigation }) => {
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         <View>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("AddCategory")}
+                                onPress={() => navigation.navigate("AddProduct",{pname:'Categories'})}
                                 style={styles.categories}
                             >
                                 <Image
@@ -88,7 +88,7 @@ const Admin = ({ navigation }) => {
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         <View>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("AddProduct")}
+                                onPress={() => navigation.navigate("AddProduct",{pname:'LatestProducts'})}
                                 style={styles.categories}
                             >
                                 <Image
@@ -110,7 +110,7 @@ const Admin = ({ navigation }) => {
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         <View>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("AddProduct")}
+                                onPress={() => navigation.navigate("AddProduct",{pname:'AllProducts'})}
                                 style={styles.categories}
                             >
                                 <Image

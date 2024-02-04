@@ -178,6 +178,65 @@ const styles = StyleSheet.create({
     inputError: {
         borderColor: 'red',
     },
+    addCart: {
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:24,
+        width:200,
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop:10,
+        marginLeft:10,
+    },
+    addCartText: {
+        fontSize: 20,
+        color: '#333',
+        fontWeight: 'bold',
+    },
+    cartRemove: {
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:24,
+        width:200,
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop:10,
+        marginLeft:10,
+    },
+    cartRemoveText: {
+        fontSize: 20,
+        color: '#333',
+        fontWeight: 'bold',
+    },
+    loginButton:{
+        width:'70%',
+        padding:10,
+        borderRadius:10,
+        backgroundColor:'#84e329',
+        marginBottom:10,
+        justifyContent:'center'
+    },
+    buttonText:{
+        textAlign:'center',
+        fontSize:20,
+        fontWeight:'bold',
+        color:'black'
+    },
+    myCart:{
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:24,
+        width:200,
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop:10,
+        marginLeft:10,
+    },
+    myCartText: {
+        fontSize: 20,
+        color: '#333',
+        fontWeight: 'bold',
+    },
     
     
 });

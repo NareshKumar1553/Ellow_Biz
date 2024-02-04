@@ -6,7 +6,7 @@ const SrcHeigth = Dimensions.get('window').height;
 export default function Loading() {
 
     return(
-        <View style={{justifyContent:'center',alignItems:'center',flex:1,backgroundColor:'white'}}>
+        <View style={{justifyContent:'center',alignItems:'center',flex:1,backgroundColor:''}}>
           <LottieView
               source={require('../asset/loading.json')}
               style={sty.animation}
