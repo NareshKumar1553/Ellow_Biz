@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, ImageBackground } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import firestore, { firebase } from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import styles from "../../styles/styles";
 import Loading from "../../animation/Loading";
 
@@ -53,9 +53,8 @@ const Home = ({ route, navigation }) => {
             setAllProducts(allProductsData);
 
             try {
-                const name = await AsyncStorage.getItem('name');
+                const [name, email] = await AsyncStorage.multiGet(['name', 'email']);
                 setName(name);
-                const email = await AsyncStorage.getItem('email');
                 setEmail(email);
                 
             } catch (error) {
@@ -68,6 +67,45 @@ const Home = ({ route, navigation }) => {
         fetchData();
     }, []);
 
+    const renderProfileImage = () => {
+        if (photo === null || photo === '') {
+            return <Image source={require('../../asset/profile.png')} style={styles.profileImage} />;
+        } else {
+            return <Image source={{ uri: photo }} style={styles.profileImage} />;
+        }
+    };
+
+    const renderBannerImage = () => {
+        if (loading) {
+            return <Loading />;
+        } else {
+            return <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/ellowbiz0.appspot.com/o/images%2Fbanner.png?alt=media&token=b61db8cc-7246-436a-88b8-2a2e11ad6b34' }} resizeMode="stretch" style={styles.bannerImage} />;
+        }
+    };
+
+    const renderCategories = (item) => {
+        if (loading) {
+            return <Loading />;
+        } else {
+            return (
+                <ImageBackground source={{ uri: item.img }} style={styles.cardImage} resizeMode="stretch">
+                </ImageBackground>
+            );
+        }
+    };
+
+    const renderCardImage = (item) => {
+        if (loading) {
+            return <Loading />;
+        } else {
+            return (
+                <ImageBackground source={{ uri: item.img }} style={styles.cardImage} resizeMode="stretch">
+                    <Text style={styles.cardPrice}>₹{item.price}</Text>
+                </ImageBackground>
+            );
+        }
+    };
+
     return (
         <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -79,12 +117,12 @@ const Home = ({ route, navigation }) => {
                         </TouchableOpacity>
                         <Text style={styles.headerText}>EllowBiz</Text>
                         <TouchableOpacity onPress={() => navigation.navigate('profile')}>
-                            {photo === null ? <Image source={require('../../asset/profile.png')} style={styles.profileImage} /> : <Image source={{ uri: photo }} style={styles.profileImage} />}
+                            {renderProfileImage()}
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.subContainerBanner}>
-                        {loading ? <Loading /> : <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/ellowbiz0.appspot.com/o/images%2Fbanner.png?alt=media&token=b61db8cc-7246-436a-88b8-2a2e11ad6b34' }} resizeMode="stretch" style={styles.bannerImage} />}
+                        {renderBannerImage()}
                     </View>
 
                     <View style={styles.subContainer}>
@@ -100,7 +138,7 @@ const Home = ({ route, navigation }) => {
                             {categories.map((item, index) => (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => navigation.navigate('#', item)} style={styles.categories}>
-                                        {loading ? <Loading /> : <ImageBackground source={{ uri: item.img }} style={styles.cardImage} resizeMode="stretch"></ImageBackground>}
+                                        {renderCategories(item)}
                                     </TouchableOpacity>
                                     <Text style={styles.imageText}>{item.name}</Text>
                                 </View>
@@ -117,11 +155,7 @@ const Home = ({ route, navigation }) => {
                             {latestProducts.map((item, index) => (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', item)} style={styles.categories}>
-                                        {loading ? <Loading /> : (
-                                            <ImageBackground source={{ uri: item.img }} style={styles.cardImage} resizeMode="stretch">
-                                                <Text style={styles.cardPrice}>₹{item.price}</Text>
-                                            </ImageBackground>
-                                        )}
+                                        {renderCardImage(item)}
                                     </TouchableOpacity>
                                     <Text style={styles.cardText}>{item.name}</Text>
                                 </View>
@@ -138,11 +172,7 @@ const Home = ({ route, navigation }) => {
                             {allProducts.map((item, index) => (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', item)} style={styles.categories}>
-                                        {loading ? <Loading /> : (
-                                            <ImageBackground source={{ uri: item.img }} style={styles.cardImage} resizeMode="stretch">
-                                                <Text style={styles.cardPrice}>₹{item.price}</Text>
-                                            </ImageBackground>
-                                        )}
+                                        {renderCardImage(item)}
                                     </TouchableOpacity>
                                     <Text style={styles.cardText}>{item.name}</Text>
                                 </View>

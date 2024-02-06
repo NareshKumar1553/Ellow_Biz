@@ -1,50 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import firestore from '@react-native-firebase/firestore';
 
-const AddProduct = ({ navigation,route }) => {
-    const [name, setName] = React.useState('');
-    const [price, setPrice] = React.useState('');
-    const [description, setDescription] = React.useState('');
-    const [image, setImage] = React.useState('');
+const AddProduct = ({ navigation, route }) => {
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
+    const [image, setImage] = useState('');
 
-    const {pname} = route.params;
-
-    // console.log('pname:', pname);
+    const { pname } = route.params;
 
     const isInputEmpty = (value) => {
         return value.trim() === '';
     };
 
     const handleAddProduct = () => {
-        if(pname === 'AllProducts'){
-            firestore().collection('products').add({
-                name: name,
-                price: price,
-                description: description,
-                image: image,
-            });
+        let collection, doc, data;
+        if (pname === 'AllProducts') {
+            collection = 'products';
+            doc = null;
+            data = {
+                name,
+                price,
+                description,
+                image,
+            };
             console.log('Product added successfully!');
-        }
-        else if(pname === 'LatestProducts'){
-            firestore().collection('photos').doc('latestProduct').collection('image').doc(name).set({
-                name: name,
-                price: price,
-                description: description,
+        } else if (pname === 'LatestProducts') {
+            collection = 'photos';
+            doc = 'latestProduct';
+            data = {
+                name,
+                price,
+                description,
                 url: image,
-            });
+            };
             console.log('Latest Product added successfully!');
-        }
-       else if(pname === 'Categories'){
-            firestore().collection('photos').doc('categories').collection('image').doc(name).set({
-                name: name,
+        } else if (pname === 'Categories') {
+            collection = 'photos';
+            doc = 'categories';
+            data = {
+                name,
                 img: image,
-            });
+            };
             console.log('Category added successfully!');
         }
+
+        if (collection && doc && data) {
+            firestore().collection(collection).doc(doc).collection('image').doc(name).set(data);
+        }
     };
+
+    const handleAddProductButtonPress = () => {
+        if (isInputEmpty(name) || isInputEmpty(price) || isInputEmpty(description) || isInputEmpty(image)) {
+            return;
+        }
+
+        handleAddProduct();
+        console.log('Product added successfully!');
+        setName('');
+        setPrice('');
+        setDescription('');
+        setImage('');
+        Alert.alert('Product added successfully!');
+        navigation.push('OrderPlaced', { name: 'Admin' });
+    };
+
     return (
-        <View style={{flex:1,justifyContent:'center',alignIt:'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Add Product</Text>
             </View>
@@ -88,24 +111,7 @@ const AddProduct = ({ navigation,route }) => {
                         placeholder="Product Image"
                     />
 
-                    <TouchableOpacity style={styles.loginButton} title="Add Product" onPress={() => {
-                        if (isInputEmpty(name) || isInputEmpty(price) || isInputEmpty(description) || isInputEmpty(image)) {
-                            return;
-                        }
-                        else {
-                            // Add product to database
-                            handleAddProduct();
-                            console.log('Product added successfully!');
-                            setName('');
-                            setPrice('');
-                            setDescription('');
-                            setImage('');
-                            Alert.alert('Product added successfully!');
-                            navigation.push('OrderPlaced',{name:'Admin'});
-                        }
-                        
-                    }
-                    }>
+                    <TouchableOpacity style={styles.loginButton} title="Add Product" onPress={handleAddProductButtonPress}>
                         <Text style={styles.loginButtonText}>Add Product</Text>
                     </TouchableOpacity>
 
@@ -115,9 +121,7 @@ const AddProduct = ({ navigation,route }) => {
     );
 }
 
-
 export default AddProduct;
-
 
 const styles = StyleSheet.create({
     header: {
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 20,
         fontWeight: 'bold',
-        color:'black'
+        color: 'black'
     },
     subContainer: {
         padding: 10,
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
     subHeadingText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color:'black'
+        color: 'black'
     },
     subContainer1: {
         padding: 10,
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 10,
-        color:'black'
+        color: 'black'
     },
     inputError: {
         borderColor: 'red',
@@ -163,6 +167,6 @@ const styles = StyleSheet.create({
     loginButtonText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color:'black'
+        color: 'black'
     },
 });

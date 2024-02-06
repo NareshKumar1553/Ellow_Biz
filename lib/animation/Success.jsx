@@ -3,42 +3,38 @@ import { View, StyleSheet, Dimensions, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 
-const ScrWidth = Dimensions.get('window').width;
-const SrcHeigth = Dimensions.get('window').height;
-
-export default function Success({route}) {
+const Success = ({ route }) => {
   const navigation = useNavigation();
   const { name } = route.params;
-  console.log('name:', name);
 
   useEffect(() => {
-    // Navigate to the home page after a delay of 2 seconds
     const timeout = setTimeout(() => {
       navigation.reset({
         index: 0,
-        routes: [{ name: name }],
+        routes: [{ name }],
       });
     }, 1500);
 
-    // Clean up the timeout when the component unmounts
     return () => clearTimeout(timeout);
   }, []);
 
-  const sty = StyleSheet.create({
+  const styles = StyleSheet.create({
     animation: {
       width: 200,
-      height: 150
-    }
+      height: 150,
+    },
   });
 
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       <LottieView
         source={require('../asset/success.json')}
-        style={sty.animation}
+        style={styles.animation}
         autoPlay
       />
     </View>
   );
-}
+};
+
+export default Success;

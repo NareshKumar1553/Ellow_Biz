@@ -6,33 +6,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import { firebase } from '@react-native-firebase/auth';
 
 const Profile = ({navigation}) => {
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [photo, setPhoto] = useState('');
-    const [age, setAge] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [address, setAddress] = useState('');
-    const [pinCode, setPinCode] = useState('');
+    const [userData, setUserData] = useState({
+        email: '',
+        name: '',
+        photo: '',
+        age: '',
+        phoneNumber: '',
+        address: '',
+        pinCode: ''
+    });
 
     useEffect(() => {
-        // Fetch user data from AsyncStorage
         const fetchUserData = async () => {
             try {
                 const user = firebase.auth().currentUser;
                 console.log('user', user);
-                setPhoto(user.photoURL);
                 if (user) {
                     const userData = await firestore().collection('users').doc(user.uid).get();
                     if (userData.exists) {
-                        const { email, name, age, phoneNumber, address, photo,pinCode } = userData.data();
-                        setEmail(email);
-                        setName(name);
-                        setAge(age);
-                        setPhoneNumber(phoneNumber);
-                        setAddress(address);
-                        setPinCode(pinCode);
-                        
-                        console.log('User data retrieved:', name, email, age, phoneNumber, address);
+                        setUserData(userData.data());
+                        console.log('User data retrieved:', userData.data().name, userData.data().email, userData.data().age, userData.data().phoneNumber, userData.data().address);
                     } else {
                         console.log('User data does not exist');
                     }
@@ -57,7 +50,7 @@ const Profile = ({navigation}) => {
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Login' }],
-              });
+            });
         } catch (error) {
             console.log('Error logging out:', error);
         }
@@ -65,24 +58,11 @@ const Profile = ({navigation}) => {
 
     const saveProfile = async () => {
         try {
-            // Save user data to AsyncStorage
-            const userData = {
-                email,
-                name,
-                age,
-                phoneNumber,
-                address,
-                photo,
-                pinCode,
-            };
-            
-            // Save user data to Firestore
             const user = firebase.auth().currentUser;
             console.log('user', user);
             if (user) {
                 await firestore().collection('users').doc(user.uid).set(userData);
-            }
-            else {
+            } else {
                 console.log('No user is logged in');
             }
             console.log('Profile saved successfully!');
@@ -95,42 +75,39 @@ const Profile = ({navigation}) => {
 
     return (
         <LinearGradient colors={['#e6ed79', '#DDF969']} style={styles.container}>
-        <Text style={styles.heading}>Profile</Text>
-        {photo ? <Image source={{uri: photo}} style={styles.headerImage} /> : <Image source={require('../../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} /> }
-       
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.text}>Email:</Text>
-            <TextInput value={email} onChangeText={setEmail} style={styles.input}/>
+            <Text style={styles.heading}>Profile</Text>
+            {userData.photo ? <Image source={{uri: userData.photo}} style={styles.headerImage} /> : <Image source={require('../../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} /> }
 
-            <Text style={styles.text}>Name:</Text>
-            <TextInput value={name} onChangeText={setName} style={styles.input}/>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.text}>Email:</Text>
+                <TextInput value={userData.email} onChangeText={value => setUserData(prevState => ({ ...prevState, email: value }))} style={styles.input}/>
 
-            <Text style={styles.text}>Age:</Text>
-            <TextInput value={age} onChangeText={setAge} style={styles.input} inputMode='numeric'/>
+                <Text style={styles.text}>Name:</Text>
+                <TextInput value={userData.name} onChangeText={value => setUserData(prevState => ({ ...prevState, name: value }))} style={styles.input}/>
 
-            <Text style={styles.text}>Phone Number:</Text>
-            <TextInput value={phoneNumber} onChangeText={setPhoneNumber} style={styles.input} inputMode='numeric'/>
+                <Text style={styles.text}>Age:</Text>
+                <TextInput value={userData.age} onChangeText={value => setUserData(prevState => ({ ...prevState, age: value }))} style={styles.input} inputMode='numeric'/>
 
-            <Text style={styles.text}>Address:</Text>
-            <TextInput value={address} onChangeText={setAddress} style={styles.input}/>
+                <Text style={styles.text}>Phone Number:</Text>
+                <TextInput value={userData.phoneNumber} onChangeText={value => setUserData(prevState => ({ ...prevState, phoneNumber: value }))} style={styles.input} inputMode='numeric'/>
 
-            <Text style={styles.text}>Pin Code:</Text>
-            <TextInput value={pinCode} onChangeText={setPinCode} inputMode='numeric' style={styles.input}/>
+                <Text style={styles.text}>Address:</Text>
+                <TextInput value={userData.address} onChangeText={value => setUserData(prevState => ({ ...prevState, address: value }))} style={styles.input}/>
 
-            <TouchableOpacity title="Save" onPress={saveProfile} style={styles.loginButton}>
-                <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
+                <Text style={styles.text}>Pin Code:</Text>
+                <TextInput value={userData.pinCode} onChangeText={value => setUserData(prevState => ({ ...prevState, pinCode: value }))} inputMode='numeric' style={styles.input}/>
 
-            <TouchableOpacity title="Logout" onPress={logOut} style={styles.loginButton}>
-                <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-        </ScrollView>
+                <TouchableOpacity title="Save" onPress={saveProfile} style={styles.button}>
+                    <Text style={styles.buttonText}>Save</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity title="Logout" onPress={logOut} style={styles.button}>
+                    <Text style={styles.buttonText}>Logout</Text>
+                </TouchableOpacity>
+            </ScrollView>
         </LinearGradient>
     );
 };
-
-export default Profile;
-
 
 const styles = StyleSheet.create({
     container: {
@@ -148,7 +125,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#eef2b6',
         color:'#333'
     },
-    loginButton: {
+    button: {
         backgroundColor:'#eef2b6',
         padding:10,
         borderRadius:24,
@@ -185,5 +162,6 @@ const styles = StyleSheet.create({
         width:200,
         color:'#333',
     }
-    
 });
+
+export default Profile;

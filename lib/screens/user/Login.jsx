@@ -13,6 +13,7 @@ GoogleSignin.configure({
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [photo, setPhoto] = useState('');
 
     const handleGoogleSignup = async () => {
         try {
@@ -22,9 +23,13 @@ const Login = ({ navigation }) => {
             await auth().signInWithCredential(googleCredential);
 
             const userInfo = await GoogleSignin.getCurrentUser();
-            const { name, email, photo } = userInfo.user;
+            const { name, email } = userInfo.user;
 
             console.log('Google user info:', userInfo);
+
+            if(photo === null) {
+                setPhoto('');
+            }
 
             await AsyncStorage.setItem('name', name);
             await AsyncStorage.setItem('email', email);

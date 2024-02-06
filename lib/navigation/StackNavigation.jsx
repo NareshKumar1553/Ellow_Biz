@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,14 +15,12 @@ import ProductDetails from "../screens/user/ProductDetails";
 import MyCart from "../screens/user/MyCart";
 import Success from "../animation/Success";
 
-
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
+    const [name, setName] = useState('');
 
-    const [name, setName] = React.useState('');
-
-    React.useEffect(() => {
+    useEffect(() => {
         const getName = async () => {
             try {
                 const name = await AsyncStorage.getItem('name');
@@ -36,7 +34,20 @@ const StackNavigation = () => {
         getName();
     }, []);
 
-        return (
+    const getScreenComponent = () => {
+        if (name === "admin@ellowbiz.com") {
+            console.log('Stack => Admin');
+            return <Stack.Screen name="Admin1" component={Admin} />;
+        } else if (name != null) {
+            console.log('Stack => Home');
+            return <Stack.Screen name="Home1" component={Home} />;
+        } else {
+            console.log('Stack => Login');
+            return <Stack.Screen name="Login1" component={Login} />;
+        }
+    };
+
+    return (
         <NavigationContainer>
             <Stack.Navigator 
                 screenOptions={{
@@ -59,17 +70,7 @@ const StackNavigation = () => {
                     },
                 }}
             >
-                { name === "admin@ellowbiz.com" ? (
-                    console.log('Stack => Admin'),
-                    <Stack.Screen name="Admin1" component={Admin} />
-                ) : name != null ? (
-                    console.log('Stack => Home'),
-                    <Stack.Screen name="Home1" component={Home} />
-                ) : (
-                    console.log('Stack => Login'),
-                    <Stack.Screen name="Login1" component={Login} />
-                )}
-
+                {getScreenComponent()}
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="profile" component={Profile} />
