@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity, Alert, StatusBar } from "react-native";
 import styles  from "../../styles/styles";
+import LinearGradient from "react-native-linear-gradient";
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/auth';
 const Admin = ({ navigation }) => {
     const [userList, setUserList] = React.useState([]);
-
+    const [orders, setOrders] = React.useState([]);
+    
     React.useEffect(() => {
         const subscriber = firestore().collection("users").onSnapshot((querySnapshot) => {
             const users = [];
@@ -18,18 +20,43 @@ const Admin = ({ navigation }) => {
             });
             setUserList(users);
         });
-        return () => subscriber();
+
+        const ordersSubscriber = firestore().collection("orders").onSnapshot((querySnapshot) => {
+            const orders = [];
+            querySnapshot.forEach((documentSnapshot) => {
+                console.log('Ordersdsd ',documentSnapshot.data(),documentSnapshot.id);
+                orders.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    
+                });
+            });
+            // Do something with the orders data
+            setOrders(orders);
+        });
+
+        return () => {
+            subscriber();
+            ordersSubscriber();
+        };
     }, []);
+
+    function timeStamptoDate(seconds, nanoseconds) {
+        timestamp = new firebase.firestore.Timestamp(seconds, nanoseconds);
+        date = timestamp.toDate();
+        return date;
+    }
 
     
     console.log(userList);
 
     return (
         console.log('Admin Page'),
+        <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{ flex: 1 }}>
         <View style={styles.container}>
             <StatusBar backgroundColor="#e6ed79" barStyle="dark-content" />
             <View style={styles.header}>
-                <Text style={styles.headerText}>Admin</Text>
+                <Text style={styles.heading}>Admin</Text>
                 <TouchableOpacity
                     onPress={() => {
                         console.log("Logout Pressed");
@@ -58,6 +85,51 @@ const Admin = ({ navigation }) => {
             </View>
 
             <ScrollView>
+
+                <View style={styles.subContainer}>
+                    <Text style={styles.subHeadingText}>RECENT ORDERS:</Text>
+                </View>
+
+                <View style={styles.subContainer1}>
+                        <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+                        <Text style={styles.cardText}>Image</Text>
+                        <Text style={styles.cardText}>Name</Text>
+                        <Text style={styles.cardText}>Date</Text>
+                        <Text style={styles.cardText}>Price</Text>
+                        <Text style={styles.cardText}>Status</Text>
+                        </View>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        <View>
+                            {orders.map((order, index) => (
+                                console.log("Orders ", order, index),
+                                <View key={order.key} style={styles.categories}>
+                                    {order.items.map((item, itemIndex) => (
+                                        <React.Fragment key={itemIndex}>
+                                            <TouchableOpacity
+                                                onPress={() => navigation.navigate("#", { order: order })}
+                                                style={styles.cardImage}
+                                            >
+                                                <Image
+                                                    source={{ uri: item.img }}
+                                                    style={styles.cardImage}
+                                                    resizeMode="stretch"
+                                                />
+                                            </TouchableOpacity>
+                                            <Text style={styles.cardText}>{item.name}</Text>
+                                            <Text style={styles.cardText}>{timeStamptoDate(order.date.seconds, order.date.nanoseconds).toDateString()}</Text>
+                                            <Text style={styles.cardText}>₹{item.price}</Text>
+                                            <Text style={styles.cardText}>{order.status}</Text>
+                                        </React.Fragment>
+                                    ))}
+                                </View>
+                            ))}
+
+                            <Text style={styles.imageText}>ORDERS</Text>
+                        </View>
+                        
+                    </ScrollView>
+                </View>
+
                 <View style={styles.subContainer}>
                     <Text style={styles.subHeadingText}>CATEGORIES:</Text>
                 </View>
@@ -129,7 +201,13 @@ const Admin = ({ navigation }) => {
                 </View>
 
                 <View style={styles.subContainer1}>
+                    <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+                        <Text style={styles.cardText}>Image</Text>
+                        <Text style={styles.cardText}>Email</Text>
+                        <Text style={styles.cardText}>Name</Text>
+                    </View>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    
                         <View>
                         {userList.map((user) => (
                                             <View key={user.key} style={styles.categories}>
@@ -166,6 +244,7 @@ const Admin = ({ navigation }) => {
 
             </ScrollView>
         </View>
+        </LinearGradient>
     );
 }
 

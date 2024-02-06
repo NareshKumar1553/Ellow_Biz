@@ -237,7 +237,16 @@ const styles = StyleSheet.create({
         color: '#333',
         fontWeight: 'bold',
     },
-    
+    heading: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        textAlign:'center',
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:15,
+        width:200,
+        color:'#333',
+    }
     
 });
 

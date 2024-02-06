@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 
@@ -16,7 +16,7 @@ export default function Success({route}) {
     const timeout = setTimeout(() => {
       navigation.reset({
         index: 0,
-        routes: [{ name: {name} }],
+        routes: [{ name: name }],
       });
     }, 1500);
 
@@ -33,6 +33,7 @@ export default function Success({route}) {
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '' }}>
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
       <LottieView
         source={require('../asset/success.json')}
         style={sty.animation}

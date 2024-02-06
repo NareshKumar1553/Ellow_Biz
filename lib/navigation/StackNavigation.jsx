@@ -2,17 +2,17 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SplashScreen from 'react-native-splash-screen';
 
-import Home from "../screens/Home";
-import Login from "../screens/Login";
-import Profile from "../screens/Profile";
-import Test1 from "../testing/test1";
+import Home from "../screens/user/Home";
+import Login from "../screens/user/Login";
+import Profile from "../screens/user/Profile";
 import Admin from "../screens/admin/Admin";
 import AddProduct from "../screens/admin/AddProduct";
 import UserDetails from "../screens/admin/UserDetails";
 import Loading from "../animation/Loading";
-import ProductDetails from "../screens/ProductDetails";
-import MyCart from "../screens/MyCart";
+import ProductDetails from "../screens/user/ProductDetails";
+import MyCart from "../screens/user/MyCart";
 import Success from "../animation/Success";
 
 
@@ -32,7 +32,7 @@ const StackNavigation = () => {
                 console.error(error);
             }
         };
-
+        SplashScreen.hide();
         getName();
     }, []);
 
@@ -60,10 +60,13 @@ const StackNavigation = () => {
                 }}
             >
                 { name === "admin@ellowbiz.com" ? (
+                    console.log('Stack => Admin'),
                     <Stack.Screen name="Admin1" component={Admin} />
                 ) : name != null ? (
+                    console.log('Stack => Home'),
                     <Stack.Screen name="Home1" component={Home} />
                 ) : (
+                    console.log('Stack => Login'),
                     <Stack.Screen name="Login1" component={Login} />
                 )}
 

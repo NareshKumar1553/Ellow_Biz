@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import styles from "../styles/styles";
+import styles from "../../styles/styles";
 import firestore from "@react-native-firebase/firestore";
 import { firebase } from '@react-native-firebase/auth';
+import LinearGradient from "react-native-linear-gradient";
 
 const ProductDetails = ({navigation,route}) => {
     const { img, price, name, description } = route.params;
@@ -41,10 +42,11 @@ const ProductDetails = ({navigation,route}) => {
 
 
     return (
+        <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{flex:1}}>
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text></Text>
-                <Text style={styles.headerText}>Product Details</Text>
+                <Text style={styles.heading}>Product Details</Text>
                 <Text></Text>
             </View>
             <View style={styles.subContainerBanner}>
@@ -52,11 +54,15 @@ const ProductDetails = ({navigation,route}) => {
             </View>
 
             <View style={styles.subContainer}>
-                <Text style={styles.subHeadingText}>{name}</Text>
+                <Text style={styles.subHeadingText}>Product Name : {name}</Text>
             </View>
 
             <View style={styles.subContainer}>
-                <Text style={styles.subHeadingText}>{price}</Text>
+                <Text style={styles.subHeadingText}>Product Price : {price}</Text>
+            </View>
+
+            <View style={styles.subContainer}>
+                <Text style={styles.subHeadingText}>About Product :</Text>
             </View>
 
             <View style={style.subContainer}>
@@ -69,6 +75,7 @@ const ProductDetails = ({navigation,route}) => {
                 </TouchableOpacity>
             </View>
         </View>
+        </LinearGradient>
     );
 }
 export default ProductDetails;
@@ -82,7 +89,7 @@ const style = StyleSheet.create({
      },
     subHeadingText: {
         fontSize: 20,
-        color: '#333',
+        color: '#DDF969',
         textAlign:'center',
         justifyContent:'center'
     },

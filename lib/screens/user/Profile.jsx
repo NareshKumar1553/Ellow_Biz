@@ -8,9 +8,11 @@ import { firebase } from '@react-native-firebase/auth';
 const Profile = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const [photo, setPhoto] = useState('');
     const [age, setAge] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [address, setAddress] = useState('');
+    const [pinCode, setPinCode] = useState('');
 
     useEffect(() => {
         // Fetch user data from AsyncStorage
@@ -18,15 +20,18 @@ const Profile = ({navigation}) => {
             try {
                 const user = firebase.auth().currentUser;
                 console.log('user', user);
+                setPhoto(user.photoURL);
                 if (user) {
                     const userData = await firestore().collection('users').doc(user.uid).get();
                     if (userData.exists) {
-                        const { email, name, age, phoneNumber, address } = userData.data();
+                        const { email, name, age, phoneNumber, address, photo,pinCode } = userData.data();
                         setEmail(email);
                         setName(name);
                         setAge(age);
                         setPhoneNumber(phoneNumber);
                         setAddress(address);
+                        setPinCode(pinCode);
+                        
                         console.log('User data retrieved:', name, email, age, phoneNumber, address);
                     } else {
                         console.log('User data does not exist');
@@ -44,6 +49,7 @@ const Profile = ({navigation}) => {
 
     const logOut = async () => {
         console.log('Logging out...');
+        Alert.alert('Logging out...');
         try {
             await AsyncStorage.clear();
             await firebase.auth().signOut();
@@ -66,9 +72,10 @@ const Profile = ({navigation}) => {
                 age,
                 phoneNumber,
                 address,
+                photo,
+                pinCode,
             };
-            await AsyncStorage.setItem('userData', JSON.stringify(userData));
-
+            
             // Save user data to Firestore
             const user = firebase.auth().currentUser;
             console.log('user', user);
@@ -88,8 +95,9 @@ const Profile = ({navigation}) => {
 
     return (
         <LinearGradient colors={['#e6ed79', '#DDF969']} style={styles.container}>
-        <Image source={require('../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} />
-
+        <Text style={styles.heading}>Profile</Text>
+        {photo ? <Image source={{uri: photo}} style={styles.headerImage} /> : <Image source={require('../../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} /> }
+       
         <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.text}>Email:</Text>
             <TextInput value={email} onChangeText={setEmail} style={styles.input}/>
@@ -105,6 +113,9 @@ const Profile = ({navigation}) => {
 
             <Text style={styles.text}>Address:</Text>
             <TextInput value={address} onChangeText={setAddress} style={styles.input}/>
+
+            <Text style={styles.text}>Pin Code:</Text>
+            <TextInput value={pinCode} onChangeText={setPinCode} inputMode='numeric' style={styles.input}/>
 
             <TouchableOpacity title="Save" onPress={saveProfile} style={styles.loginButton}>
                 <Text style={styles.buttonText}>Save</Text>
@@ -144,7 +155,8 @@ const styles = StyleSheet.create({
         width:200,
         alignItems:'center',
         justifyContent:'center',
-        marginTop:40,
+        marginTop:20,
+        marginBottom:30,
     },
     buttonText: {
         color:'#333',
@@ -163,4 +175,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginTop: 20,
     },
+    heading: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        textAlign:'center',
+        backgroundColor:'#e6ed79',
+        padding:10,
+        borderRadius:15,
+        width:200,
+        color:'#333',
+    }
+    
 });
