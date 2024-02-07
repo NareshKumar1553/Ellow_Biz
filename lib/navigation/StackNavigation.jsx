@@ -38,12 +38,12 @@ const StackNavigation = () => {
         if (name === "admin@ellowbiz.com") {
             console.log('Stack => Admin');
             return <Stack.Screen name="Admin1" component={Admin} />;
-        } else if (name != null) {
-            console.log('Stack => Home');
-            return <Stack.Screen name="Home1" component={Home} />;
-        } else {
+        } else if (name === null || name === "" || name === undefined || name === "null" || name === "undefined") {
             console.log('Stack => Login');
             return <Stack.Screen name="Login1" component={Login} />;
+        } else {
+            console.log('Stack => Home');
+            return <Stack.Screen name="Home1" component={Home} />;
         }
     };
 

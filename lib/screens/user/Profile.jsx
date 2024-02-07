@@ -76,7 +76,7 @@ const Profile = ({navigation}) => {
     return (
         <LinearGradient colors={['#e6ed79', '#DDF969']} style={styles.container}>
             <Text style={styles.heading}>Profile</Text>
-            {userData.photo ? <Image source={{uri: userData.photo}} style={styles.headerImage} /> : <Image source={require('../../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} /> }
+            {userData.photoUrl ? <Image source={{uri: userData.photoUrl}} style={styles.headerImage} /> : <Image source={require('../../../android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png')} style={styles.headerImage} /> }
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={styles.text}>Email:</Text>

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StatusBar, ScrollView, ImageBackground } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import firestore from '@react-native-firebase/firestore';
+import firestore, { firebase } from '@react-native-firebase/firestore';
 import styles from "../../styles/styles";
 import Loading from "../../animation/Loading";
 
@@ -54,6 +54,7 @@ const Home = ({ route, navigation }) => {
 
             try {
                 const [name, email] = await AsyncStorage.multiGet(['name', 'email']);
+                setPhoto(firebase.auth().currentUser.photoURL);
                 setName(name);
                 setEmail(email);
                 
@@ -109,7 +110,7 @@ const Home = ({ route, navigation }) => {
     return (
         <LinearGradient colors={['#e6ed79', '#83eb6e']} style={{ flex: 1 }}>
             <View style={styles.container}>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <StatusBar barStyle="dark-content" backgroundColor={'#e6ed79'} />
                     <View style={styles.header}>
                         <TouchableOpacity onPress={() => navigation.navigate('MyCart')} style={styles.headerTouch}>
